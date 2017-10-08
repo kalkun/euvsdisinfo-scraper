@@ -76,7 +76,20 @@ def build_dataset(csvfile, offset=None, pages=None):
 
     case_links = get_all_cases(**args)
     data = []
-    csv_header = ['summary', 'keywords', 'source', 'date', 'reported by', 'outlet', 'title', 'disproof', 'language', 'issue', 'origin']
+    csv_header = [
+        'issue',
+        'date',
+        'outlet',
+        'language',
+        'origin',
+        'reported by',
+        'keywords',
+        'source',
+        'title',
+        'summary',
+        'disproof',
+    ]
+
     print("_" * 80)
     for link in case_links:
         try:
@@ -89,7 +102,7 @@ def build_dataset(csvfile, offset=None, pages=None):
 
     with open(csvfile, 'w') as f:
         writer = csv.writer(f, delimiter=';', quoting=csv.QUOTE_ALL)
-        writer.writerows(data)
+        writer.writerows([csv_header] + data)
 
 
 
@@ -124,6 +137,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     build_dataset(**vars(args))
-    print("_" * 80)
-    print("Offset will be %s " % args.offset)
-    print("_" * 80)
+    print("Done")

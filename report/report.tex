@@ -1,0 +1,25 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+%%%%
+% Some title section: A visualization of fake news reported by euvsdisinfo.eu
+%%%%
+\section{Introduction}
+Since the introduction of the internet, information has been able to reach further and faster than ever before. Recent developments of omnipresent social media has created the perfect platform for the spread of this information within the internet. For the sake of advertisement social media platforms are becoming increasingly better at targeting their audience. As put by the team behind the newfeed at Facebook: ``The right information to the right people at the right time''. However, the context is important to understand the consequence of this statement when the main purpose is to generate money through advertisement. Then, the statement becomes something alike: the information that will get the user to interact with the content, and the quality of the information becomes an invariant to the equation. 
+Because of the nature of social media, it is also the main target for demagogues to spread misinformation.
+
+\section{method}
+
+\subsection{Article scraping and content extraction}
+A general approach to extracting content is diffuclt because source of information can be any sort of media, whehter digital or physical, in writing or a video. An because each website is different, then even building a scraper to extract the content of the subset that are online articles, will be difficult. Furthermore, in order to consider the names of locations that are being mentioned in the articles, the entire content is not necessary. For this reason I chose to use the meta tags to extract information about the content, summary, titles and descriptions. I would also filter on html tags such as the header tags, h1, h2, h3, h4, h5, h6 as well as the <title> tag used for setting the window title. I found through experiment that only considering the first found header tag worked best, the reason is that other header tags than the first one would often be titles of other news articles that the news site wants the user to click on.
+
+The meta tag proved to be a very reliable way, since most news sites are interested in their content being shared, so its almost a must, in order to get content shared on social media.
+
+In order to avoid duplicating content as much as possible I compared the content of a meta tag or html tag to the content that was already found in previous html tags. This approach resulted most often in a short paragraph of information about the article, including keywords, title and summary. Before applying the approach to the articles scraped from euvsdisinfo.eu, it was tested on sampled articles, such as danish news outlets. It was also tried on a sample of articles taken from the subreddits: r/politics, r/news, and r/worldnews, because these were good collections of all different news articles and news outlets. The results was used to evaluate qualitatively on the smaller sample. None of which turned out to have no content, and only one resulted in an extract only consisting of keywords. However, interestingly among the keywords were also the name of the country that the news story revolved around.
+One thing that was clear from this however, was that locations were not always mentioned if the news revolved around well known state leaders such as Putin, Merkel or Trump. In such cases, only the names of the state leaders were present as indication of what countries were mentioned in the articles.
+
+\subsection{Named entity recognition}
+Named entity recognition is a research field within natural language processing concerned with recognizing names of things such as people, company names, or, as relevant for this project, locations. The study of recognizing location names within texts is one of the most studies ares of named entity recognition, however, still an ongoing research. A more in depth explanation of named entity recognition or even natural language processing, is however, beyond the scope of this project. Instead for the purposes of this project, I will rely on existing tools.
+
+\end{document}

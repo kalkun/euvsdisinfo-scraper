@@ -44,7 +44,10 @@ whitespace = re.compile("(\r|\n|\t|u'\xa0')+")
 def rm_whitespace(s): return re.sub(whitespace, " ", s).strip()
 
 def describe_article(url):
-    page = req.get(url, headers={"User-Agent": "chrome"})
+    try:
+        page = req.get(url, headers={"User-Agent": "chrome"})
+    except req.exceptions.TooManyRedirects:
+        return "", ""
     soup = bs(page.content, 'lxml')
     metatags = {}
     for tag in metatag_list:

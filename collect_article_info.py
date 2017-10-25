@@ -43,6 +43,11 @@ tag_list = [ ("h%s" % i, None) for i in range(1, 7) ] + [("title", None)]
 whitespace = re.compile("(\r|\n|\t|u'\xa0')+")
 def rm_whitespace(s): return re.sub(whitespace, " ", s).strip()
 
+def dump_extracts(rows):
+    with open("test_extraction.csv", "w") as f:
+        writer = csv.writer(f, delimiter=",", quotechar="\"", quoting=csv.QUOTE_ALL)
+        writer.writerows(rows)
+
 def describe_article(url):
     try:
         page = req.get(url, headers={"User-Agent": "chrome"})
@@ -99,10 +104,6 @@ def describe_article(url):
     return tags.strip(), info
 
 if __name__ == "__main__":
-    def dump_extracts(rows):
-        with open("test_extraction.csv", "w") as f:
-            writer = csv.writer(f, delimiter=",", quotechar="\"", quoting=csv.QUOTE_ALL)
-            writer.writerows(rows)
     try:
         with open("./full_dataset_formatted.csv", "r") as f:
             reader = csv.reader(f, delimiter=",", quotechar="\"")

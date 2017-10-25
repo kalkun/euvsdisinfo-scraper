@@ -1,0 +1,58 @@
+- Citizen science angle 
+    - i wanna develope a tool that allows citizens to be researchers on their own into the spread of fake news on facebook, would have to include requirements for how easy to use etc.
+    - tool for everyday user
+        - interface that given a url of a news story follows the spread or shares on facebook.
+        - might have limits on what can be scraped about private people sharing a post. 
+        - might have limited value of the location information
+        - Could look at content of news - analysing location name, countries, cities etc.
+        - Wouldnt have to know exactly where its going - how can we visualize fake news, identified by EEAF? Is it possible to allow people to explore the spread of the news.
+- maybe doing visualization on my own and presenting them would be more aligned with the scope. Check with asap.
+- Content of news stories (getting locations and mapping them)
+    - "Geographies of involvement"
+    - Could show it as hacker attacks over time, who started it, whos getting attacked.
+    - Could use google to vec, with a list of known countries and cities, and measure KNN for words in the article.
+
+- What graphs do you get from the URLS running through crowdtangle, then creating graphs from each post/page that involves the url. Then group them by the news outlet.
+    - Networks of disinformation mutating over time for the outlets 
+    - Show evolving as a timeline for each newsoutlet - or grouped as one somehow.
+
+
+
+
+------------------------------------------------------------------------------------------------
+
+Questions:
+
+    - How can it be visualized where and when fake news are created, and what countries are victims in terms of being mentioned in the content?
+
+    - What are the patterns that can be seen if social media data is used as scale of impact of fake news stories?
+
+    - In what countries do fake news emerge?
+
+    - What are the countries that are mentioned in fake news?
+
+
+Method: 
+    In this project I will be using the list of urls tagged as fake news by the EEAF under the European Union in the campaign euvsdisinfo.eu.
+    Using the information obtained by euvsdisinfo.eu, I will look at what countries are listed as the origin of these newstories. I will then use existing natural language processing methods to attempt to extract information about what countries are being mentioned in the content of these news stories. 
+
+    I will then visualize this information in order to allow visual inspection of what countries falls victims the these news stories and from what countries the stories emerged from.
+
+    I will be using information about how many times these news stories were shared and interacted with on social media as a way to compare the relative scale of the fake news.
+
+Result:
+    - The result will be a report stating my findings as well as a website that will present the visualization.
+
+Approach:
+    - scrape all fake news cases 
+    - how many of them are articles?
+    - How many are in english?
+    - how many characters in non-english articles? (is it no more than what can be translated for free using google translate API?)
+    - Translate all non-english articles
+    - Extract location names (cities, countries) mentioned in the articles
+    - Use listed origin as perpetrator
+    - Visualize 'attacks' on a map, preferebly rendered in chronological order
+    - Use the number of shares/interactions to scale the visualized attack
+   
+Thoughts:
+    Using D3 for visualization. One way is to visualize in a similar fashioin as the visualized intrusion detection system by IT department.

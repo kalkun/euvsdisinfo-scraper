@@ -1,0 +1,193 @@
+\documentclass{beamer}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\title{Fake news}
+\subtitle{Exploring and visualizing cases from euvsdisinfo.eu}
+\author{Jesper Henrichsen}
+\institute{IT University}
+\date{\today}
+
+\usepackage{color}
+\definecolor{deepblue}{rgb}{0,0,0.7}
+\definecolor{deepred}{rgb}{0.6,0,0}
+\definecolor{deepgreen}{rgb}{0,0.5,0}
+
+\lstset{
+    basicstyle=\ttfamily\scriptsize,
+    keywordstyle=\color{deepblue}\ttfamily,
+    stringstyle=\color{deepred}\ttfamily,
+    commentstyle=\color{deepgreen}\ttfamily,
+    emphstyle=\color{deepred}\ttfamily,
+    showstringspaces=false,
+    breaklines=true
+    tabsize=2,
+    numbers=left,
+    % frame=tb,                         % Any extra options here
+    otherkeywords={self},             % Add keywords here
+    backgroundcolor=\color{lightgray},
+}
+\begin{document}
+  \frame{\titlepage}
+  \begin{frame}
+  \frametitle{Problem statement}
+  \begin{itemize}
+    \item<1-> How can it be visualized where and when fake news are created, and what countries are victims in terms of being mentioned in the content?
+    \item<2-> What are the patterns that can be seen if social media data is used as scale of impact of fake news stories?
+    % \item<3-> In what countries do fake news emerge?
+    % \item<4-> What are the countries that are mentioned in fake news?
+  \end{itemize}
+  \end{frame}
+  \begin{frame}
+    \frametitle{Resource euvsdisinfo.eu} 
+    % and defining fake news}
+    \begin{itemize}
+        \item<1-> Campaign setup by the {\it European External Action Service East Stratcom Task Force}
+        \item<2-> Composed of 14 full time staff, and a network of 400 journalists, NGO's, Think Tanks etc. 
+        \item<3-> Objective to ``challenge Russia's ongoing disinformation campaigns''
+        \item<4-> Started in 2015 and ongoing
+        \item<5-> About 3400 news flagged as fake news
+    \end{itemize}
+  \end{frame}
+
+  \begin{frame}
+    \frametitle{Example of cases at euvsdisinfo.eu}
+    \includegraphics<1-1>[width=\textwidth]{images/example_cases.png}
+    \includegraphics<2-2>[width=\textwidth]{images/example_fakenews.png}
+    \includegraphics<3-3>[width=\textwidth]{images/example_source.png}
+  \end{frame}
+
+  \begin{frame}[fragile]
+  \frametitle{Scraping}
+  \begin{onlyenv}<1> %{
+    \framesubtitle<1>{For every case in the list of cases}
+    \lstinputlisting[language=Python,firstline=53, lastline=67]{../news_scraper.py}
+  \end{onlyenv}
+  % }
+  \begin{onlyenv}<2> %{
+    \framesubtitle<2>{Scrape the article info}
+    \lstinputlisting[language=Python,firstline=17,lastline=23]{../news_scraper.py}
+  \end{onlyenv}
+  \begin{onlyenv}<3>
+    \framesubtitle<3>{Wrapped in commandline interface}
+    \begin{lstlisting}
+$ ./news_scraper.py -h
+    usage: news_scraper.py [-h] [-o o] [-p p] csv
+
+    A scraper for the fake news available at
+    euvsdisinfo.eu.
+
+    positional arguments:
+      csv               The csv file to write output to
+
+    optional arguments:
+      -h, --help        Show this help message and exit.
+      -o o, --offset o  The offset page to start scraping
+                        news.
+      -p p, --pages p   The number of pages to fetch,
+                        each page includes at most 
+                        10 fake news cases.
+    \end{lstlisting}
+  \end{onlyenv}
+  \begin{onlyenv}<4>
+    \framesubtitle<4>{Including description from meta tags}
+    \lstinputlisting[language=Python,firstline=26,lastline=40]{../collect_article_info.py}
+  \end{onlyenv}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Location tagging using Stanford Named Entity Recognition}
+    \begin{itemize}
+        \item<1-2> Pretrained models for arabic, chinese, english, french, german, and spanish. (No russian). 
+        \item<2-2> Attempts to recognize locations and people in text.
+    \end{itemize}
+    \begin{onlyenv}<3>
+        \framesubtitle<3>{Concatenating all available text for an article and feed to NER tagger}
+        \begin{lstlisting}[language=Python]
+for line in csvreader:                                
+    content = ""                                    
+    content += " " + line[header['keywords']]
+    content += " " + line[header['title']]
+    content += " " + line[header['summary']]
+    content += " " + line[header['metatags_content']]
+    tagged = tagCell(content)          
+    locations   = toString(filterTags(tagged, ["LOCATION"]))
+    miscs       = toString(filterTags(tagged, ["MISC"]))
+    people      = toString(filterTags(tagged, ["PERSON"]))
+        \end{lstlisting}
+    \end{onlyenv}
+    \begin{onlyenv}<4>
+    {\footnotesize
+    \begin{tabular}{l | l | l }
+        {\bf title } & {\bf language } & {\bf locations }\\ \hline
+        % Russia never met with the AfD & Russian & Russia \\
+        Crimea decided its own fate & Russian & Crimea,Russia,China,India \\
+        Ukraine is a neo-Nazi state & Russian & Ukraine,West \\
+        NATO is encircling Russia. & Czech & Russia \\
+        Ukraine is governed by Nazis. & Russian & Ukraine \\
+        Sweden wants to leave the EU. & Spain & Sweden \\
+        Georgia is a US colony. & Georgian & Georgia,US \\
+        Ukraine has a Nazi identity. & Russian & Ukraine \\
+        Ukraine is a part of Russia. & Russian & Ukraine,Russia \\
+        Savchenko is a US spy. & Russian & US \\
+        Nazis control Ukraine. & Russian & Ukraine \\
+        NATO kills Serbian children. & English & PravdaReport,West,Russia,Having,\\
+                                     &         & Syria,russia,Serbia,Yugoslavia \\
+        Ukraine is governed by nazis. & Russian & Ukraine \\
+        All Ukraine is Russia. & Russian & Ukraine,Russia \\
+    \end{tabular}
+    }
+    \end{onlyenv}
+
+    \begin{onlyenv}<5>
+    % \framesubtitle<5>{Top 5 mentioned locations}
+    \begin{tabular}{l | l}
+        \begin{tabular}{l | l}
+        {\bf language} & {\bf \% of articles} \\ \hline
+            Russian     &   55 \\
+            Czech       &   16 \\
+            English     &   9 \\
+            Slovak      &   2 \\
+            Georgian    &   2 \\
+        \end{tabular} &
+        \begin{tabular}{l | l }
+        {\bf location} & {\bf \% of articles} \\ \hline
+            Ukraine &   27 \\
+            Russia  &   23 \\
+            USA     &   21 \\
+            Europe  &   8  \\
+            Syria   &   5  \\ 
+        \end{tabular} \\
+    \end{tabular}
+    \end{onlyenv}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Visualizing}
+    \begin{onlyenv}<1-2>
+        \framesubtitle<1-2>{Translating location names to coordinates}
+        \begin{block}{Nominatim}<1>
+            Searchengine for searching OpenStreetMaps data by name.
+        \end{block}
+        \includegraphics<2>[width=\textwidth]{images/nomatim.png}
+    \end{onlyenv}
+    \begin{onlyenv}<3-4>
+        \framesubtitle<3-4>{Weigh stories by their social media spread}
+        \begin{block}{Facebook graph API}
+            \begin{onlyenv}<3>
+                \lstinputlisting[language=Python, firstline=27, lastline=32]{../requests_fb.py}
+            \end{onlyenv}
+            \begin{onlyenv}<4>
+                \includegraphics<4>[width=\textwidth]{images/get_shares.png}
+            \end{onlyenv} 
+        \end{block}
+    \end{onlyenv}
+    \begin{onlyenv}<5-7>
+        \includegraphics<5>[width=\textwidth]{images/lazy_norse.png}
+        \includegraphics<6>[width=\textwidth]{images/terror_example.png}
+        \includegraphics<7>[width=\textwidth]{images/heatmap.jpg}
+    \end{onlyenv}
+\end{frame}
+
+\end{document}

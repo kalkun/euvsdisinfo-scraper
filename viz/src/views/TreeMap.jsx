@@ -87,7 +87,14 @@ function fromData(props) {
 
     cell.append("text")
       .attr('dy', "20")
-      .text(d =>  d.value > 100000 ? (byName ? d.data[byName] : d.data.outlet) : '')
+      // .text(d =>  d.value > 100000 ? (byName ? d.data[byName] : d.data.outlet) : '')
+      .text(d => {
+        if (props.sizeBy === 'likes') {
+          return d.value > 100000 ? (byName ? d.data[byName] : d.data.outlet) : '';
+        } else if (d.value > 50) {
+          return d.data.key;
+        }
+      })
 
     cell.append("title")
       .text(d => {

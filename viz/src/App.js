@@ -33,7 +33,11 @@ class App extends Component {
     for (let grouping of groupings || this.state.groupings) {
       tmpview.key(d => d[grouping])
     }
-    tmpview.rollup(d => this.state.sizeBy === 'likes' ? d['likes'] : d.length)
+    if (this.state.sizeBy === 'count') {
+      // tmpview.rollup(d => this.state.sizeBy === 'likes' ? d['likes'] : d.length)
+      tmpview.rollup(d => d.length)
+      
+    }
     return tmpview.entries(this.state.original)
   }
 
@@ -82,12 +86,14 @@ class App extends Component {
     /*
     * Either by 'count' or 'likes'
     */
-    if (!(sizeBy === 'count' || sizeBy === 'likes')) {
-      // defaults to 'likes':
-      sizeBy = 'likes'
+
+    if (sizeBy === undefined) {
+      // if nothing is set, toggles value
+      sizeBy = this.state.sizeBy === 'likes' ? 'count' : 'likes';
     }
     this.setState(currentState => {
       currentState.sizeBy = sizeBy
+      currentState.view = this.groupBy(currentState.groupings)
       return currentState;
     })
   }
@@ -96,10 +102,13 @@ class App extends Component {
     return (
       <div className='container'>
         <h3>{this.state.view.length}</h3>
+        <div style={{"display":"block"}}> 
         <button onClick={() => this.reset()}>Reset</button>
         <button onClick={() => this.byLanguage()}>Group by Language</button>
         <button onClick={() => this.byReportedBy()}>Group by reporter</button>
         <button onClick={() => this.byOutlet()}>Group by news outlet</button>
+        </div>
+        <button onClick={() => this.setSize()}>Size by: {this.state.sizeBy}</button>
         {this.state.groupings.length ?
           <div>
           <h4>Groupings:</h4>

@@ -118,7 +118,7 @@ class App extends Component {
         </div>
         : null  }
         
-        <svg className="treeMap" width="1200" height="800" style={{"display":"block"}}></svg>
+        <svg className="treeMap" width="1200" height="600" style={{"display":"block"}}></svg>
         { TreeMap.fromData({
             key: "View",
             values : this.state.view,

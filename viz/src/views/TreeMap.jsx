@@ -42,7 +42,7 @@ function fromData(props) {
         // width = +svg.attr("width"),
         // height = +svg.attr("height");
         width = 1200,
-        height = 800;
+        height = 600;
 
     svg.selectAll("g").remove();
 

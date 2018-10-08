@@ -25,7 +25,7 @@ def get_case(url):
     meta_info = soup.find("div", class_="report-meta-info").find_all("div", class_="report-meta-item")
     for m in meta_info:
         meta_name = m.find("b").text
-        meta_field = m.find("span").text.strip()
+        meta_field = m.find(["span", "a"]).text.strip()
         if "Reported in" in meta_name:
             issue = r.search(meta_field)
             if issue is None:
@@ -36,13 +36,13 @@ def get_case(url):
             fields['date'] = meta_field
         elif "Language" in meta_name:
             fields['language'] = meta_field
-        elif "Country of Origin" in meta_name:
+        elif "Country" in meta_name:
             fields['origin'] = meta_field
-        elif "Reported by" in meta_name:
-            fields['reported by'] = meta_field
+        #elif "Reported by" in meta_name:
+        #    fields['reported by'] = meta_field
         elif "Keywords" in meta_name:
             fields['keywords'] = meta_field
-        elif "Disinforming outlet" in meta_name:
+        elif "Outlet" in meta_name:
             fields['outlet'] = meta_field
 
     print("\n>>%s<<" % fields['title'])
@@ -82,7 +82,7 @@ def build_dataset(csvfile, offset=None, pages=None):
         'outlet',
         'language',
         'origin',
-        'reported by',
+        # 'reported by', does not seem to exist anymore
         'keywords',
         'source',
         'title',

@@ -6,17 +6,19 @@
 
     The following is an example of describing a wikipedia article on yellow journalism:
     ```
-    from collect_article_info import describe_article as da
-    da("https://en.wikipedia.org/wiki/Yellow_journalism")
+    >>> from collect_article_info import describe_article as da
+    >>> da("https://en.wikipedia.org/wiki/Yellow_journalism")
     ```
 
 """
-
-import requests as req
-from bs4 import BeautifulSoup as bs
-import json
+import os
 import csv
+import json
 import re
+import requests as req
+import argparse
+from bs4 import BeautifulSoup as bs
+
 """
 * metatag_list is a list of triples where the first are the key value pairs to
 * use as filters for relevant tags, the last is the name of the attribute for which
@@ -104,8 +106,21 @@ def describe_article(url):
     return tags.strip(), info
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Collects meta data for articles given scraped dataset "
+                    "of cases euvsdisinfo.eu"
+    )
+    parser.add_argument(
+        "-f",
+        "--file",
+        default="./full_dataset_formatted.csv",
+        help="Scraped dataset"
+    )
+    args = parser.parse_args()
+    if not os.path.isfile(args.file):
+        raise ValueError("Input file '{}' was not found".format(args.file))
     try:
-        with open("./full_dataset_formatted.csv", "r") as f:
+        with open(args.file, "r") as f:
             reader = csv.reader(f, delimiter=",", quotechar="\"")
             orig_header = next(reader)
             header = {v: k for k, v in enumerate(orig_header)}
@@ -126,4 +141,3 @@ if __name__ == "__main__":
         print("Data dumped")
     # if finished, dump data:
     dump_extracts(newRows)
-

@@ -105,10 +105,6 @@ def build_dataset(csvfile, offset=None, pages=None):
         writer.writerows([csv_header] + data)
 
 
-
-
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description="A scraper for the fake news available at euvsdisinfo.eu"

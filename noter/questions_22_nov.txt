@@ -1,5 +1,0 @@
-- What visualizations would be fitting?
-    - What parts would be relevant for a graph visualization?
-    - How do I go about making such graph? (specific software)
-- Report
-- The project still at SAP for getting accepted, should I move on that somehow?

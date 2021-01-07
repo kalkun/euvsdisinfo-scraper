@@ -3,7 +3,7 @@ bs4==0.0.1 ; python_version > "3"
 certifi==2018.8.24 ; python_version > "3"
 chardet==3.0.4 ; python_version > "3"
 idna==2.7 ; python_version > "3"
-lxml==4.2.5 ; python_version > "3"
+lxml==4.6.2 ; python_version > "3"
 requests==2.19.1 ; python_version > "3"
 urllib3==1.23 ; python_version > "3"
 

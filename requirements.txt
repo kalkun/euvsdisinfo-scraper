@@ -7,4 +7,4 @@ lxml==4.6.3 ; python_version > "3"
 requests==2.19.1 ; python_version > "3"
 urllib3==1.23 ; python_version > "3"
 
-nltk==3.3
+nltk==3.6.3
